@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { motion } from 'framer-motion';
+import { motion } from '../lib/motion';
 import { TypeAnimation } from 'react-type-animation';
 import CountUp from 'react-countup';
 import {

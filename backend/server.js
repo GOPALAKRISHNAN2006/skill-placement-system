@@ -19,6 +19,7 @@ const analyticsRoutes = require('./routes/analytics.routes');
 const assessmentRoutes = require('./routes/assessment.routes');
 const learningPathRoutes = require('./routes/learningPath.routes');
 const feedbackRoutes = require('./routes/feedback.routes');
+const adminRoutes = require('./routes/admin.routes');
 
 // Initialize app
 const app = express();
@@ -61,6 +62,7 @@ app.use('/api/analytics', analyticsRoutes);
 app.use('/api/assessments', assessmentRoutes);
 app.use('/api/learning-paths', learningPathRoutes);
 app.use('/api/feedback', feedbackRoutes);
+app.use('/api/admin', adminRoutes);
 
 // Health check
 app.get('/api/health', (req, res) => {

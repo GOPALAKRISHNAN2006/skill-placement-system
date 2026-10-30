@@ -210,7 +210,7 @@ router.get('/applications', protect, async (req, res) => {
  * @desc    Get all students (Admin/Recruiter)
  * @access  Private (Admin/Recruiter)
  */
-router.get('/all', protect, authorize('admin', 'recruiter', 'college'), async (req, res) => {
+router.get('/all', protect, authorize('admin', 'recruiter', 'college', 'college_admin'), async (req, res) => {
   try {
     const { page = 1, limit = 20, department, minScore } = req.query;
 

@@ -19,7 +19,7 @@ const generateToken = (id) => {
  */
 router.post('/register', validateRegistration, async (req, res) => {
   try {
-    const { name, email, password, role } = req.body;
+    const { name, email, password, role, company, college, institution, department, graduationYear } = req.body;
 
     // Check if user exists
     const existingUser = await User.findOne({ email });
@@ -30,13 +30,33 @@ router.post('/register', validateRegistration, async (req, res) => {
       });
     }
 
-    // Create user
-    const user = await User.create({
+    let userRole = role === 'college' ? 'college_admin' : (role || 'student');
+    const allowedRoles = ['student', 'recruiter', 'college_admin', 'admin'];
+    if (!allowedRoles.includes(userRole)) {
+      userRole = 'student';
+    }
+
+    const userData = {
       name,
       email,
       password,
-      role: role || 'student'
-    });
+      role: userRole
+    };
+
+    if (userRole === 'recruiter') {
+      userData.company = typeof company === 'object' ? company : { name: company || institution || 'Company' };
+    } else if (userRole === 'college_admin') {
+      userData.college = typeof college === 'object' ? college : { name: college || institution || 'Institution' };
+    } else if (institution || department || graduationYear) {
+      userData.education = [{
+        institution: institution || '',
+        degree: department || '',
+        year: graduationYear || ''
+      }];
+    }
+
+    // Create user
+    const user = await User.create(userData);
 
     // Generate token
     const token = generateToken(user._id);

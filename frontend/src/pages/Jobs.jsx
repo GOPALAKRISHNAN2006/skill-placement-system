@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion, AnimatePresence } from '../lib/motion';
 import {
   Search, Filter, MapPin, Building2, Clock, DollarSign, Users,
   ExternalLink, TrendingUp, Briefcase, ChevronDown, ChevronUp, Star,
@@ -26,6 +26,18 @@ const courseSkillsMap = {
   13: ['Python', 'Machine Learning', 'Deep Learning', 'AI', 'Data Science'],
   14: ['Git', 'Docker', 'AWS', 'CI/CD', 'DevOps'],
   15: ['SQL', 'MySQL', 'PostgreSQL', 'Database']
+};
+
+const isValidExternalUrl = (value) => {
+  try {
+    const url = new URL(value);
+    const hostname = url.hostname.toLowerCase().replace(/^\[|\]$/g, '');
+    const isLoopback = hostname === 'localhost' || hostname.endsWith('.localhost') ||
+      hostname === '::1' || hostname === '0.0.0.0' || /^127(?:\.\d{1,3}){3}$/.test(hostname);
+    return ['http:', 'https:'].includes(url.protocol) && !isLoopback;
+  } catch {
+    return false;
+  }
 };
 
 const Jobs = () => {
@@ -328,7 +340,7 @@ const Jobs = () => {
           <p style={{ fontSize: '0.75rem' }}>Try adjusting your search or filters</p>
         </div>
       ) : (
-        <div style={styles.jobsList}>
+        <div className="responsive-grid-2" style={{ gap: '0.85rem' }}>
           {filteredJobs.map((job, index) => {
             const isExpanded = expandedJob === job.id;
             return (
@@ -459,7 +471,7 @@ const Jobs = () => {
                     {isExpanded ? <ChevronUp size={13} /> : <ChevronDown size={13} />}
                     {isExpanded ? 'Less' : 'Details'}
                   </button>
-                  <a href={job.applyUrl && job.applyUrl !== '#' ? job.applyUrl : `https://www.google.com/search?q=${encodeURIComponent(job.company + ' careers')}`} target="_blank" rel="noopener noreferrer" style={styles.applyButton}>
+                  <a href={isValidExternalUrl(job.applyUrl) ? job.applyUrl : `https://www.google.com/search?q=${encodeURIComponent(job.company + ' careers')}`} target="_blank" rel="noopener noreferrer" style={styles.applyButton}>
                     Apply <ExternalLink size={12} />
                   </a>
                 </div>

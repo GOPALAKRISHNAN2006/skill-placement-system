@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
-import { Routes, Route } from 'react-router-dom';
-import { AnimatePresence } from 'framer-motion';
+import { Routes, Route, Navigate } from 'react-router-dom';
+import { AnimatePresence } from './lib/motion';
 
 // Pages
 import LandingPage from './pages/LandingPage';
@@ -15,6 +15,7 @@ import ResumeAnalyzer from './pages/ResumeAnalyzer';
 import Assessments from './pages/Assessments';
 import Analytics from './pages/Analytics';
 import Profile from './pages/Profile';
+import Admin from './pages/Admin';
 
 // Layout
 import Layout from './components/layout/Layout';
@@ -56,10 +57,15 @@ function App() {
           <Route path="/courses" element={<Courses />} />
           <Route path="/learning-path" element={<LearningPath />} />
           <Route path="/resume" element={<ResumeAnalyzer />} />
+          <Route path="/resume-analyzer" element={<ResumeAnalyzer />} />
           <Route path="/assessments" element={<Assessments />} />
           <Route path="/analytics" element={<Analytics />} />
           <Route path="/profile" element={<Profile />} />
+          <Route path="/admin" element={<Admin />} />
         </Route>
+
+        {/* Catch-all Fallback */}
+        <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
     </AnimatePresence>
   );

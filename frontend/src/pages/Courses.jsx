@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion, AnimatePresence } from '../lib/motion';
 import { QRCodeSVG } from 'qrcode.react';
 import {
   Search, Filter, BookOpen, Clock, Users, Star, Play, ChevronDown,
@@ -1017,7 +1017,7 @@ const Courses = () => {
                     <h3 style={{ marginBottom: '1rem', color: '#111827' }}>About this Course</h3>
                     <p style={{ color: '#4b5563', lineHeight: 1.7, marginBottom: '1.5rem' }}>{selectedCourse.description}</p>
                     
-                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '1rem', marginBottom: '1.5rem' }}>
+                    <div className="responsive-grid-3" style={{ marginBottom: '1.5rem' }}>
                       <div style={{ padding: '1rem', background: '#faf5ff', borderRadius: '12px', textAlign: 'center' }}>
                         <div style={{ fontSize: '1.5rem', fontWeight: 700, color: '#2E073F' }}>{selectedCourse.videos.length}</div>
                         <div style={{ color: '#6b7280', fontSize: '0.9rem' }}>Video Lessons</div>

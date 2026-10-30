@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect, useCallback } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion, AnimatePresence } from '../lib/motion';
 import {
   ClipboardCheck, Clock, Award, CheckCircle, Play, Lock,
   Star, TrendingUp, Target, Timer, Trophy,

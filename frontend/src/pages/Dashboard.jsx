@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { Link } from 'react-router-dom';
-import { motion } from 'framer-motion';
+import { motion } from '../lib/motion';
 import { CircularProgressbar, buildStyles } from 'react-circular-progressbar';
 import 'react-circular-progressbar/dist/styles.css';
 import {
@@ -219,7 +219,7 @@ const Dashboard = () => {
         </div>
 
         {/* Main Layout */}
-        <div style={styles.mainGrid}>
+        <div className="dashboard-main-grid">
           {/* Left Column */}
           <div style={styles.leftCol}>
             {/* Score Card */}
@@ -276,7 +276,7 @@ const Dashboard = () => {
           {/* Center Column */}
           <div style={styles.centerCol}>
             {/* Stats Row */}
-            <div style={styles.statsRow}>
+            <div className="responsive-grid-4">
               {quickStats.map((stat, i) => (
                 <motion.div key={i} style={styles.statCard} whileHover={{ y: -2 }}>
                   <div style={{...styles.statIcon, background: `${stat.color}15`, color: stat.color}}><stat.icon size={16} /></div>
@@ -290,7 +290,7 @@ const Dashboard = () => {
             </div>
 
             {/* Two Column Grid */}
-            <div style={styles.twoCol}>
+            <div className="responsive-grid-2">
               {/* Skill Gap */}
               <div style={styles.card}>
                 <div style={styles.cardHeader}>
@@ -339,7 +339,7 @@ const Dashboard = () => {
                 <span style={styles.cardTitle}><BookOpen size={14} /> Continue Learning</span>
                 <Link to="/courses" style={styles.link}>All Courses <ChevronRight size={12} /></Link>
               </div>
-              <div style={styles.courseGrid}>
+              <div className="responsive-grid-3">
                 {courses.map((c, i) => (
                   <div key={i} style={styles.courseItem}>
                     <span style={styles.courseIcon}>{c.image}</span>

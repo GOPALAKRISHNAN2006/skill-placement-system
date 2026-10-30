@@ -1,8 +1,4 @@
-/**
- * ⭐ UNIQUE FEATURE 1: AI-Based Skill Gap Analyzer
- * Analyzes student's current skills vs industry requirements
- * Identifies missing skills and provides recommendations
- */
+
 
 const User = require('../models/User');
 const Skill = require('../models/Skill');

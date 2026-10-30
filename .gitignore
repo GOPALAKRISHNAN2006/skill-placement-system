@@ -42,8 +42,11 @@ Thumbs.db
 .idea/
 
 # =====================
-# Git internals (safety)
+# Git internals & Redundant Nested Folders (safety)
 # =====================
 .git/index.lock
+skill-placement-system-main/
+.code0/
+*.log
 
-
+frontend/.env.development

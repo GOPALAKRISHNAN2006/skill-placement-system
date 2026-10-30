@@ -3,7 +3,7 @@ const path = require('path');
 const fs = require('fs');
 
 // Ensure upload directory exists
-const uploadDir = 'uploads/resumes';
+const uploadDir = path.resolve(__dirname, '..', 'uploads', 'resumes');
 if (!fs.existsSync(uploadDir)) {
   fs.mkdirSync(uploadDir, { recursive: true });
 }
@@ -14,23 +14,36 @@ const storage = multer.diskStorage({
     cb(null, uploadDir);
   },
   filename: function (req, file, cb) {
+    const userId = req.user?.id || req.user?._id || 'guest';
     const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
-    cb(null, `resume-${req.user.id}-${uniqueSuffix}${path.extname(file.originalname)}`);
+    cb(null, `resume-${userId}-${uniqueSuffix}${path.extname(file.originalname)}`);
   }
 });
 
-// File filter for PDFs and DOCs
-const fileFilter = (req, file, cb) => {
-  const allowedTypes = [
-    'application/pdf',
-    'application/msword',
-    'application/vnd.openxmlformats-officedocument.wordprocessingml.document'
-  ];
+const supportedResumeTypes = new Map([
+  ['.pdf', ['application/pdf', 'application/x-pdf', 'application/octet-stream']],
+  ['.docx', [
+    'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+    'application/x-zip-compressed',
+    'application/zip',
+    'application/octet-stream'
+  ]]
+]);
 
-  if (allowedTypes.includes(file.mimetype)) {
+function isSupportedResumeFile(originalName, mimeType) {
+  const extension = path.extname(String(originalName || '')).toLowerCase();
+  const allowedMimes = supportedResumeTypes.get(extension);
+  if (!allowedMimes) return false;
+  return allowedMimes.includes(String(mimeType || '').toLowerCase());
+}
+
+// Require the extension and MIME type to agree; Multer's generated filename
+// keeps the upload outside any path supplied in originalName.
+const fileFilter = (req, file, cb) => {
+  if (isSupportedResumeFile(file.originalname, file.mimetype)) {
     cb(null, true);
   } else {
-    cb(new Error('Invalid file type. Only PDF and DOC files are allowed.'), false);
+    cb(new Error('Invalid file type. Only PDF and DOCX files with matching extensions and MIME types are allowed.'), false);
   }
 };
 
@@ -42,5 +55,7 @@ const upload = multer({
     fileSize: 5 * 1024 * 1024 // 5MB limit
   }
 });
+
+upload.isSupportedResumeFile = isSupportedResumeFile;
 
 module.exports = upload;

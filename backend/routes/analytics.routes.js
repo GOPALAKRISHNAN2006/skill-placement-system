@@ -9,7 +9,7 @@ const router = express.Router();
  * @desc    Get college analytics dashboard
  * @access  Private (College Admin)
  */
-router.get('/college', protect, authorize('college', 'admin'), async (req, res) => {
+router.get('/college', protect, authorize('college', 'college_admin', 'admin'), async (req, res) => {
   try {
     const collegeId = req.user.collegeProfile?.collegeName || req.query.collegeId;
 
@@ -84,7 +84,7 @@ router.get('/admin', protect, authorize('admin'), async (req, res) => {
  * @desc    Get skill trends across platform
  * @access  Private (Admin/College)
  */
-router.get('/skill-trends', protect, authorize('admin', 'college'), async (req, res) => {
+router.get('/skill-trends', protect, authorize('admin', 'college', 'college_admin'), async (req, res) => {
   try {
     const User = require('../models/User');
     const students = await User.find({ role: 'student' }).select('_id');
@@ -110,7 +110,7 @@ router.get('/skill-trends', protect, authorize('admin', 'college'), async (req, 
  * @desc    Get placement probability by score ranges
  * @access  Private (Admin/College)
  */
-router.get('/placement-probability', protect, authorize('admin', 'college'), async (req, res) => {
+router.get('/placement-probability', protect, authorize('admin', 'college', 'college_admin'), async (req, res) => {
   try {
     const probability = await AnalyticsService.getPlacementProbability();
 
@@ -132,7 +132,7 @@ router.get('/placement-probability', protect, authorize('admin', 'college'), asy
  * @desc    Get course effectiveness rankings
  * @access  Private (Admin/College)
  */
-router.get('/course-effectiveness', protect, authorize('admin', 'college'), async (req, res) => {
+router.get('/course-effectiveness', protect, authorize('admin', 'college', 'college_admin'), async (req, res) => {
   try {
     const effectiveness = await AnalyticsService.getCourseEffectiveness();
 

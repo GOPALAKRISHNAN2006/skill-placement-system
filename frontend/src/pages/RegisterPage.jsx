@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion, AnimatePresence } from '../lib/motion';
 import { 
   Sparkles, Mail, Lock, Eye, EyeOff, ArrowRight, User,
-  GraduationCap, Briefcase, Building2, Check, ChevronLeft
+  GraduationCap, Building2, Check, ChevronLeft, Briefcase
 } from 'lucide-react';
 import toast from 'react-hot-toast';
 import useAuthStore from '../store/authStore';
@@ -12,8 +12,7 @@ const RegisterPage = () => {
   const [step, setStep] = useState(1);
   const [formData, setFormData] = useState({
     name: '', email: '', password: '', confirmPassword: '',
-    role: 'student', institution: '', department: '', graduationYear: '',
-    company: '', designation: ''
+    role: 'student', institution: '', department: '', graduationYear: ''
   });
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
@@ -21,9 +20,9 @@ const RegisterPage = () => {
   const { register } = useAuthStore();
 
   const roles = [
-    { id: 'student', icon: GraduationCap, title: 'Student', description: 'Looking for skill development and job opportunities' },
-    { id: 'recruiter', icon: Briefcase, title: 'Recruiter', description: 'Hiring talent for your organization' },
-    { id: 'college', icon: Building2, title: 'College Admin', description: 'Managing placement activities for your institution' }
+    { id: 'student', icon: GraduationCap, title: 'Student', description: 'Access AI resume analyzer, skill gap tests & jobs' },
+    { id: 'recruiter', icon: Building2, title: 'Recruiter', description: 'Post jobs, discover verified candidates & manage hiring' },
+    { id: 'college_admin', icon: Briefcase, title: 'College Admin', description: 'Monitor batch placement readiness & department analytics' }
   ];
 
   const features = [
@@ -141,7 +140,7 @@ const RegisterPage = () => {
               {step === 1 && (
                 <motion.div key="step1" initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -20 }}>
                   <h1 style={styles.title}>Join SkillForge</h1>
-                  <p style={styles.subtitle}>Select your role to get started</p>
+                  <p style={styles.subtitle}>Create a student account to get started</p>
                   
                   {roles.map((role) => (
                     <motion.button
@@ -195,10 +194,10 @@ const RegisterPage = () => {
                   {formData.role === 'student' && (
                     <>
                       <div style={styles.inputGroup}>
-                        <label style={styles.label}>Institution</label>
+                        <label style={styles.label}>Institution / College</label>
                         <div style={styles.inputWrapper}>
                           <Building2 size={20} style={styles.inputIcon} />
-                          <input type="text" name="institution" value={formData.institution} onChange={handleChange} placeholder="Your University" style={styles.input} />
+                          <input type="text" name="institution" value={formData.institution} onChange={handleChange} placeholder="Your University / College" style={styles.input} />
                         </div>
                       </div>
                       <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
@@ -208,7 +207,7 @@ const RegisterPage = () => {
                         </div>
                         <div style={styles.inputGroup}>
                           <label style={styles.label}>Graduation Year</label>
-                          <input type="text" name="graduationYear" value={formData.graduationYear} onChange={handleChange} placeholder="2025" style={{ ...styles.input, paddingLeft: '1rem' }} />
+                          <input type="text" name="graduationYear" value={formData.graduationYear} onChange={handleChange} placeholder="2026" style={{ ...styles.input, paddingLeft: '1rem' }} />
                         </div>
                       </div>
                     </>
@@ -217,30 +216,33 @@ const RegisterPage = () => {
                   {formData.role === 'recruiter' && (
                     <>
                       <div style={styles.inputGroup}>
-                        <label style={styles.label}>Company</label>
+                        <label style={styles.label}>Company / Organization Name</label>
                         <div style={styles.inputWrapper}>
-                          <Briefcase size={20} style={styles.inputIcon} />
-                          <input type="text" name="company" value={formData.company} onChange={handleChange} placeholder="Your Company" style={styles.input} />
+                          <Building2 size={20} style={styles.inputIcon} />
+                          <input type="text" name="institution" value={formData.institution} onChange={handleChange} placeholder="e.g. Google, TechCorp Solutions" style={styles.input} required />
                         </div>
                       </div>
                       <div style={styles.inputGroup}>
-                        <label style={styles.label}>Designation</label>
-                        <div style={styles.inputWrapper}>
-                          <User size={20} style={styles.inputIcon} />
-                          <input type="text" name="designation" value={formData.designation} onChange={handleChange} placeholder="HR Manager" style={styles.input} />
-                        </div>
+                        <label style={styles.label}>Industry / Domain</label>
+                        <input type="text" name="department" value={formData.department} onChange={handleChange} placeholder="e.g. Information Technology, Cloud" style={{ ...styles.input, paddingLeft: '1rem' }} />
                       </div>
                     </>
                   )}
 
-                  {formData.role === 'college' && (
-                    <div style={styles.inputGroup}>
-                      <label style={styles.label}>Institution Name</label>
-                      <div style={styles.inputWrapper}>
-                        <Building2 size={20} style={styles.inputIcon} />
-                        <input type="text" name="institution" value={formData.institution} onChange={handleChange} placeholder="College/University Name" style={styles.input} />
+                  {formData.role === 'college_admin' && (
+                    <>
+                      <div style={styles.inputGroup}>
+                        <label style={styles.label}>College / University Name</label>
+                        <div style={styles.inputWrapper}>
+                          <Building2 size={20} style={styles.inputIcon} />
+                          <input type="text" name="institution" value={formData.institution} onChange={handleChange} placeholder="e.g. Sri Shakthi Institute of Engineering" style={styles.input} required />
+                        </div>
                       </div>
-                    </div>
+                      <div style={styles.inputGroup}>
+                        <label style={styles.label}>Placement Cell / Department</label>
+                        <input type="text" name="department" value={formData.department} onChange={handleChange} placeholder="Directorate of Placement & Training" style={{ ...styles.input, paddingLeft: '1rem' }} />
+                      </div>
+                    </>
                   )}
 
                   <div style={styles.buttonRow}>

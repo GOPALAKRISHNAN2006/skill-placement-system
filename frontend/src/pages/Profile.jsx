@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { motion } from 'framer-motion';
+import { motion } from '../lib/motion';
 import {
   Mail, Phone, MapPin, GraduationCap,
   Edit2, Camera, Save, X, Linkedin, Github,
