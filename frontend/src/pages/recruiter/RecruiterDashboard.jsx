@@ -6,6 +6,7 @@ import {
 } from 'lucide-react';
 import toast from 'react-hot-toast';
 import useAuthStore from '../../store/authStore';
+import { API_BASE_URL } from '../../utils/api';
 import RecruiterHeaderNav from '../../components/recruiter/RecruiterHeaderNav';
 
 const RecruiterDashboard = () => {
@@ -20,7 +21,7 @@ const RecruiterDashboard = () => {
     else setRefreshing(true);
 
     try {
-      const res = await fetch('http://localhost:5000/api/recruiter/dashboard', {
+      const res = await fetch(`${API_BASE_URL}/recruiter/dashboard`, {
         headers: {
           'Authorization': `Bearer ${token}`
         }

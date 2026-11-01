@@ -55,10 +55,13 @@ const accounts = [
   }
 ];
 
-async function ensureAccounts() {
+async function ensureAccounts(options = {}) {
+  const { isCli = false } = options;
   try {
-    await mongoose.connect(MONGODB_URI);
-    console.log(`Connected to MongoDB at ${MONGODB_URI}`);
+    if (mongoose.connection.readyState !== 1) {
+      await mongoose.connect(MONGODB_URI);
+      console.log(`Connected to MongoDB at ${MONGODB_URI}`);
+    }
 
     for (const acc of accounts) {
       const existing = await User.findOne({ email: acc.email });
@@ -66,25 +69,40 @@ async function ensureAccounts() {
         await User.create(acc);
         console.log(`[CREATED] ${acc.role.toUpperCase()}: ${acc.email} | password: ${acc.password}`);
       } else {
-        // Ensure role is correct
-        existing.role = acc.role;
-        if (acc.company) existing.company = acc.company;
-        if (acc.college) existing.college = acc.college;
-        existing.password = acc.password; // pre-save will rehash
-        await existing.save();
-        console.log(`[UPDATED] ${acc.role.toUpperCase()}: ${acc.email} | password: ${acc.password}`);
+        let changed = false;
+        if (existing.role !== acc.role) {
+          existing.role = acc.role;
+          changed = true;
+        }
+        if (acc.company && !existing.company?.name) {
+          existing.company = acc.company;
+          changed = true;
+        }
+        if (acc.college && !existing.college?.name) {
+          existing.college = acc.college;
+          changed = true;
+        }
+        if (changed) {
+          await existing.save();
+          console.log(`[UPDATED] ${acc.role.toUpperCase()}: ${acc.email}`);
+        }
       }
     }
 
-    const allUsers = await User.find({}).select('email role name');
-    console.log('\n--- Current Registered Users in DB ---');
-    console.table(allUsers.map(u => ({ id: u._id.toString(), email: u.email, role: u.role, name: u.name })));
-
-    process.exit(0);
+    if (isCli) {
+      const allUsers = await User.find({}).select('email role name');
+      console.log('\n--- Current Registered Users in DB ---');
+      console.table(allUsers.map(u => ({ id: u._id.toString(), email: u.email, role: u.role, name: u.name })));
+      process.exit(0);
+    }
   } catch (err) {
     console.error('Error ensuring accounts:', err);
-    process.exit(1);
+    if (isCli) process.exit(1);
   }
 }
 
-ensureAccounts();
+if (require.main === module) {
+  ensureAccounts({ isCli: true });
+}
+
+module.exports = { ensureAccounts, accounts };

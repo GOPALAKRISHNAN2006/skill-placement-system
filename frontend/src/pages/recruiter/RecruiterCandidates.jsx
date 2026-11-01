@@ -4,6 +4,7 @@ import {
 } from 'lucide-react';
 import toast from 'react-hot-toast';
 import useAuthStore from '../../store/authStore';
+import { API_BASE_URL } from '../../utils/api';
 import RecruiterHeaderNav from '../../components/recruiter/RecruiterHeaderNav';
 
 const RecruiterCandidates = () => {
@@ -29,7 +30,7 @@ const RecruiterCandidates = () => {
     else setRefreshing(true);
 
     try {
-      let url = 'http://localhost:5000/api/recruiter/candidates';
+      let url = `${API_BASE_URL}/recruiter/candidates`;
       const params = new URLSearchParams();
       if (search) params.append('search', search);
       if (selectedSkill) params.append('skill', selectedSkill);
@@ -56,7 +57,7 @@ const RecruiterCandidates = () => {
 
   const fetchJobs = async () => {
     try {
-      const res = await fetch('http://localhost:5000/api/recruiter/jobs', {
+      const res = await fetch(`${API_BASE_URL}/recruiter/jobs`, {
         headers: { 'Authorization': `Bearer ${token}` }
       });
       const json = await res.json();
@@ -97,7 +98,7 @@ const RecruiterCandidates = () => {
 
     setSendingInvite(true);
     try {
-      const res = await fetch('http://localhost:5000/api/recruiter/invite', {
+      const res = await fetch(`${API_BASE_URL}/recruiter/invite`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

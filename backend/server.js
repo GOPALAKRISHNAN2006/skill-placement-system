@@ -21,35 +21,66 @@ const learningPathRoutes = require('./routes/learningPath.routes');
 const feedbackRoutes = require('./routes/feedback.routes');
 const adminRoutes = require('./routes/admin.routes');
 const recruiterRoutes = require('./routes/recruiter.routes');
+const { ensureAccounts } = require('./scripts/ensureRoleAccounts');
 
 // Initialize app
 const app = express();
 
-// Middleware
+// Parse frontend URLs (comma-separated or single URL)
+const configuredOrigins = (process.env.FRONTEND_URL || '')
+  .split(',')
+  .map(url => url.trim().replace(/\/$/, ''))
+  .filter(Boolean);
+
 const allowedOrigins = [
   'http://localhost:3000',
   'http://localhost:3001',
   'http://localhost:3002',
-  process.env.FRONTEND_URL
-].filter(Boolean);
+  ...configuredOrigins
+];
 
 app.use(cors({
   origin: function (origin, callback) {
-    // Allow requests with no origin (mobile apps, curl, etc.)
+    // Allow non-browser requests (mobile apps, curl, server-to-server, Render health checkers)
     if (!origin) return callback(null, true);
-    // Allow all onrender.com subdomains + localhost
-    if (allowedOrigins.includes(origin) || origin.endsWith('.onrender.com')) {
+    
+    const normalized = origin.replace(/\/$/, '');
+    if (
+      allowedOrigins.includes(normalized) ||
+      normalized.endsWith('.onrender.com') ||
+      normalized.endsWith('.vercel.app') ||
+      normalized.endsWith('.netlify.app') ||
+      process.env.NODE_ENV !== 'production'
+    ) {
       return callback(null, true);
     }
-    callback(new Error('Not allowed by CORS'));
+    callback(new Error(`Origin ${origin} not allowed by CORS`));
   },
-  credentials: true
+  credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With']
 }));
+
 app.use(express.json({ limit: '50mb' }));
 app.use(express.urlencoded({ extended: true, limit: '50mb' }));
 
 // Static files for uploads
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
+
+// Root & Health check endpoints (essential for Render health monitoring)
+app.get('/', (req, res) => {
+  res.json({ 
+    name: 'SkillForge Placement System API',
+    status: 'online', 
+    version: '1.0.0',
+    healthCheck: '/api/health',
+    timestamp: new Date().toISOString()
+  });
+});
+
+app.get('/health', (req, res) => {
+  res.redirect('/api/health');
+});
 
 // API Routes
 app.use('/api/auth', authRoutes);
@@ -66,11 +97,12 @@ app.use('/api/feedback', feedbackRoutes);
 app.use('/api/admin', adminRoutes);
 app.use('/api/recruiter', recruiterRoutes);
 
-// Health check
+// Detailed Health check
 app.get('/api/health', (req, res) => {
   res.json({ 
     status: 'OK', 
     message: 'SkillForge API is running',
+    database: mongoose.connection.readyState === 1 ? 'connected' : 'disconnected',
     timestamp: new Date().toISOString()
   });
 });
@@ -113,6 +145,13 @@ const startServer = async () => {
     await mongoose.connect(MONGODB_URI);
     console.log('✅ Connected to MongoDB successfully!');
     console.log(`📦 Database: ${mongoose.connection.name}`);
+
+    // Auto-ensure essential system role accounts exist
+    try {
+      await ensureAccounts();
+    } catch (accErr) {
+      console.warn('⚠️ Note: Could not auto-ensure default accounts:', accErr.message);
+    }
     
     app.listen(PORT, () => {
       console.log(`🚀 Server running on port ${PORT}`);

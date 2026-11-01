@@ -5,6 +5,7 @@ import {
 } from 'lucide-react';
 import toast from 'react-hot-toast';
 import useAuthStore from '../../store/authStore';
+import { API_BASE_URL } from '../../utils/api';
 import RecruiterHeaderNav from '../../components/recruiter/RecruiterHeaderNav';
 
 const RecruiterJobs = () => {
@@ -45,7 +46,7 @@ const RecruiterJobs = () => {
     else setRefreshing(true);
 
     try {
-      const res = await fetch('http://localhost:5000/api/recruiter/jobs', {
+      const res = await fetch(`${API_BASE_URL}/recruiter/jobs`, {
         headers: { 'Authorization': `Bearer ${token}` }
       });
       const json = await res.json();
@@ -165,8 +166,8 @@ const RecruiterJobs = () => {
 
     try {
       const url = editingJob
-        ? `http://localhost:5000/api/recruiter/jobs/${editingJob._id}`
-        : 'http://localhost:5000/api/recruiter/jobs';
+        ? `${API_BASE_URL}/recruiter/jobs/${editingJob._id}`
+        : `${API_BASE_URL}/recruiter/jobs`;
       const method = editingJob ? 'PUT' : 'POST';
 
       const res = await fetch(url, {
@@ -194,7 +195,7 @@ const RecruiterJobs = () => {
   const handleToggleStatus = async (job) => {
     const nextStatus = job.status === 'active' ? 'closed' : 'active';
     try {
-      const res = await fetch(`http://localhost:5000/api/recruiter/jobs/${job._id}`, {
+      const res = await fetch(`${API_BASE_URL}/recruiter/jobs/${job._id}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
@@ -219,7 +220,7 @@ const RecruiterJobs = () => {
       return;
     }
     try {
-      const res = await fetch(`http://localhost:5000/api/recruiter/jobs/${jobId}`, {
+      const res = await fetch(`${API_BASE_URL}/recruiter/jobs/${jobId}`, {
         method: 'DELETE',
         headers: { 'Authorization': `Bearer ${token}` }
       });

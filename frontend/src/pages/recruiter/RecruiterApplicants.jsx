@@ -3,6 +3,7 @@ import { useLocation } from 'react-router-dom';
 import { Users, Search, X, ChevronRight } from 'lucide-react';
 import toast from 'react-hot-toast';
 import useAuthStore from '../../store/authStore';
+import { API_BASE_URL } from '../../utils/api';
 import RecruiterHeaderNav from '../../components/recruiter/RecruiterHeaderNav';
 
 const RecruiterApplicants = () => {
@@ -29,7 +30,7 @@ const RecruiterApplicants = () => {
     else setRefreshing(true);
 
     try {
-      let url = 'http://localhost:5000/api/recruiter/applicants';
+      let url = `${API_BASE_URL}/recruiter/applicants`;
       const params = new URLSearchParams();
       if (selectedJob && selectedJob !== 'all') params.append('jobId', selectedJob);
       if (selectedStatus && selectedStatus !== 'all') params.append('status', selectedStatus);
@@ -56,7 +57,7 @@ const RecruiterApplicants = () => {
 
   const fetchJobs = async () => {
     try {
-      const res = await fetch('http://localhost:5000/api/recruiter/jobs', {
+      const res = await fetch(`${API_BASE_URL}/recruiter/jobs`, {
         headers: { 'Authorization': `Bearer ${token}` }
       });
       const json = await res.json();
@@ -96,7 +97,7 @@ const RecruiterApplicants = () => {
     setUpdatingStatus(true);
     try {
       const res = await fetch(
-        `http://localhost:5000/api/recruiter/applicants/${activeApplicant.jobId}/${activeApplicant._id}/status`,
+        `${API_BASE_URL}/recruiter/applicants/${activeApplicant.jobId}/${activeApplicant._id}/status`,
         {
           method: 'PUT',
           headers: {

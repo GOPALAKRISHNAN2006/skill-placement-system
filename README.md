@@ -293,15 +293,77 @@ npm --prefix frontend run build
 
 Run the commands supported by your package scripts and review the output for errors or warnings.
 
-## 🌐 Deployment
+## 🌐 Deployment on Render
 
-SkillForge is hosted on Render.
+SkillForge is optimized for seamless deployment on **Render** (as a Node.js Web Service for the backend and a Static Site for the frontend).
 
-- **Frontend:** [SkillForge Live Application](https://skill-placement-system-1.onrender.com/)
-- **Backend:** [SkillForge Backend Service](https://skill-placement-system.onrender.com)
-- **Source Code:** [GitHub Repository](#)
+### Architecture Overview
 
-The React frontend communicates with the Node.js and Express backend through API requests. The backend connects to MongoDB Atlas and uses configured environment variables for database access and other integrations.
+```text
+React SPA (Render Static Site)
+  │
+  ├─── Rewrites: /* -> /index.html (via _redirects)
+  │
+  └─── API Calls (CORS enabled)
+         │
+         ▼
+Node.js / Express API (Render Web Service)
+  │
+  ├─── Auto-seeds default role accounts on connect
+  └─── Connects to MongoDB Atlas Cloud Database
+```
+
+### 1. Backend Deployment (Render Web Service)
+1. In Render Dashboard, click **New +** > **Web Service**.
+2. Connect your GitHub repository: `skill-placement-system`.
+3. Configure the following settings:
+   - **Name**: `skill-placement-backend`
+   - **Root Directory**: `backend`
+   - **Environment**: `Node`
+   - **Build Command**: `npm install`
+   - **Start Command**: `npm start`
+   - **Health Check Path**: `/api/health`
+4. Add the following **Environment Variables**:
+   | Variable | Value / Description |
+   |---|---|
+   | `NODE_ENV` | `production` |
+   | `PORT` | `5000` |
+   | `MONGODB_URI` | Your MongoDB Atlas connection string (e.g. `mongodb+srv://...`) |
+   | `JWT_SECRET` | A secure random 32+ character string |
+   | `FRONTEND_URL` | Your frontend Render URL (e.g. `https://skill-placement-frontend.onrender.com`) |
+   | `GEMINI_API_KEY` | *(Optional)* Your Google Gemini API Key for AI resume parsing |
+   | `RESUME_AI_MODEL` | `gemini-3.8-flash` |
+
+### 2. Frontend Deployment (Render Static Site)
+1. In Render Dashboard, click **New +** > **Static Site**.
+2. Connect your GitHub repository: `skill-placement-system`.
+3. Configure the following settings:
+   - **Name**: `skill-placement-frontend`
+   - **Root Directory**: `frontend`
+   - **Build Command**: `npm install && npm run build`
+   - **Publish Directory**: `build`
+4. Add the following **Environment Variables**:
+   | Variable | Value / Description |
+   |---|---|
+   | `REACT_APP_API_URL` | `https://<your-backend-slug>.onrender.com/api` |
+   | `GENERATE_SOURCEMAP` | `false` |
+5. **SPA Routing**: Handled automatically via `public/_redirects` (`/* /index.html 200`) and `render.yaml`. All client-side routes (dashboard, recruiter, admin) will reload cleanly without 404s.
+
+### 3. Automated Deployment via Render Blueprint (`render.yaml`)
+Alternatively, deploy both services together in 1 click using Render Blueprints:
+1. In Render Dashboard, click **New +** > **Blueprint**.
+2. Select your repository. Render will automatically detect `render.yaml` and configure both the backend service and frontend static site with all build parameters, health check, and rewrites.
+
+### 🔐 Default Pre-configured Role Accounts
+
+On initial connection to MongoDB, the backend automatically ensures the following accounts exist:
+
+| Role | Email | Password | Access Portal |
+|---|---|---|---|
+| **Admin** | `admin@skillforge.com` | `admin123` | `/admin/login` & `/admin/*` |
+| **Recruiter** | `recruiter@skillforge.com` | `recruiter123` | `/recruiter/login` & `/recruiter/*` |
+| **College Admin** | `college@skillforge.com` | `college123` | `/login` |
+| **Student** | `student@skillforge.com` | `student123` | `/login` & Student Dashboard |
 
 ## 🤖 Code0 Development Workflow
 
