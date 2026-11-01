@@ -3,7 +3,8 @@ import { Outlet, Link, useLocation, useNavigate } from 'react-router-dom';
 import { motion } from '../../lib/motion';
 import {
   LayoutDashboard, Briefcase, BookOpen, Route, FileText,
-  ClipboardCheck, BarChart3, User, LogOut, Menu, X, Sparkles, Search, ChevronDown, Shield
+  ClipboardCheck, BarChart3, User, LogOut, Menu, X, Sparkles, Search, ChevronDown, Shield,
+  Users, GraduationCap, Settings, ExternalLink, Building2
 } from 'lucide-react';
 import useAuthStore from '../../store/authStore';
 
@@ -45,7 +46,27 @@ const Layout = () => {
     setProfileMenuOpen(false);
   }, [location.pathname]);
 
-  const baseMenuItems = [
+  const isAdminPath = location.pathname.startsWith('/admin');
+  const isRecruiterPath = location.pathname.startsWith('/recruiter');
+
+  const adminMenuItems = [
+    { icon: LayoutDashboard, label: 'Admin Overview', path: '/admin' },
+    { icon: Users, label: 'User Accounts', path: '/admin/users' },
+    { icon: Briefcase, label: 'Job Postings', path: '/admin/jobs' },
+    { icon: GraduationCap, label: 'Colleges & Cells', path: '/admin/colleges' },
+    { icon: ClipboardCheck, label: 'Skills & Tests', path: '/admin/assessments' },
+    { icon: Settings, label: 'System Health', path: '/admin/settings' },
+  ];
+
+  const recruiterMenuItems = [
+    { icon: LayoutDashboard, label: 'Recruiter Hub', path: '/recruiter' },
+    { icon: Briefcase, label: 'My Postings', path: '/recruiter/jobs' },
+    { icon: Users, label: 'Applicant Pipeline', path: '/recruiter/applicants' },
+    { icon: Search, label: 'Talent Pool', path: '/recruiter/candidates' },
+    { icon: Building2, label: 'Company Profile', path: '/recruiter/profile' },
+  ];
+
+  const studentMenuItems = [
     { icon: LayoutDashboard, label: 'Dashboard', path: '/dashboard' },
     { icon: Briefcase, label: 'Jobs', path: '/jobs' },
     { icon: BookOpen, label: 'Courses', path: '/courses' },
@@ -56,9 +77,20 @@ const Layout = () => {
     { icon: User, label: 'Profile', path: '/profile' },
   ];
 
-  const menuItems = user?.role === 'admin'
-    ? [...baseMenuItems, { icon: Shield, label: 'Admin Panel', path: '/admin' }]
-    : baseMenuItems;
+  let menuItems;
+  if (user?.role === 'admin') {
+    if (isAdminPath) {
+      menuItems = adminMenuItems;
+    } else if (isRecruiterPath) {
+      menuItems = recruiterMenuItems;
+    } else {
+      menuItems = [...studentMenuItems, { icon: Shield, label: 'Admin Module', path: '/admin' }];
+    }
+  } else if (user?.role === 'recruiter') {
+    menuItems = recruiterMenuItems;
+  } else {
+    menuItems = studentMenuItems;
+  }
 
   const handleLogout = () => {
     logout();
@@ -125,18 +157,18 @@ const Layout = () => {
                 width: '38px',
                 height: '38px',
                 borderRadius: '10px',
-                background: 'linear-gradient(135deg, #a78bfa 0%, #c4b5fd 100%)',
+                background: isAdminPath ? 'linear-gradient(135deg, #f59e0b 0%, #d97706 100%)' : 'linear-gradient(135deg, #a78bfa 0%, #c4b5fd 100%)',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
                 flexShrink: 0
               }}
             >
-              <Sparkles size={20} color="white" />
+              {isAdminPath ? <Shield size={20} color="white" /> : <Sparkles size={20} color="white" />}
             </div>
             {(isMobile || sidebarOpen) && (
-              <span style={{ fontWeight: 700, fontSize: '1.2rem', color: 'white', whiteSpace: 'nowrap' }}>
-                SkillForge
+              <span style={{ fontWeight: 700, fontSize: '1.15rem', color: 'white', whiteSpace: 'nowrap' }}>
+                {isAdminPath ? 'SkillForge Admin' : 'SkillForge'}
               </span>
             )}
           </div>
@@ -218,8 +250,64 @@ const Layout = () => {
           </ul>
         </nav>
 
-        {/* Logout Bottom Section */}
+        {/* View Switcher & Logout Bottom Section */}
         <div style={{ padding: '0.85rem', borderTop: '1px solid rgba(255,255,255,0.12)' }}>
+          {user?.role === 'admin' && (
+            <button
+              onClick={() => navigate(isAdminPath ? '/dashboard' : '/admin')}
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: '0.85rem',
+                width: '100%',
+                padding: (isMobile || sidebarOpen) ? '0.7rem 0.9rem' : '0.7rem',
+                borderRadius: '10px',
+                background: isAdminPath ? 'rgba(251, 191, 36, 0.15)' : 'rgba(167, 139, 250, 0.15)',
+                border: 'none',
+                color: isAdminPath ? '#fbbf24' : '#c4b5fd',
+                cursor: 'pointer',
+                transition: 'all 0.2s',
+                justifyContent: (isMobile || sidebarOpen) ? 'flex-start' : 'center',
+                marginBottom: '0.5rem'
+              }}
+            >
+              {isAdminPath ? <ExternalLink size={17} style={{ flexShrink: 0 }} /> : <Shield size={17} style={{ flexShrink: 0 }} />}
+              {(isMobile || sidebarOpen) && (
+                <span style={{ fontWeight: 600, fontSize: '0.82rem', whiteSpace: 'nowrap' }}>
+                  {isAdminPath ? 'Student Portal' : 'Admin Control'}
+                </span>
+              )}
+            </button>
+          )}
+
+          {user?.role === 'recruiter' && (
+            <button
+              onClick={() => navigate(isRecruiterPath ? '/jobs' : '/recruiter')}
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: '0.85rem',
+                width: '100%',
+                padding: (isMobile || sidebarOpen) ? '0.7rem 0.9rem' : '0.7rem',
+                borderRadius: '10px',
+                background: isRecruiterPath ? 'rgba(56, 189, 248, 0.15)' : 'rgba(167, 139, 250, 0.15)',
+                border: 'none',
+                color: isRecruiterPath ? '#38bdf8' : '#c4b5fd',
+                cursor: 'pointer',
+                transition: 'all 0.2s',
+                justifyContent: (isMobile || sidebarOpen) ? 'flex-start' : 'center',
+                marginBottom: '0.5rem'
+              }}
+            >
+              {isRecruiterPath ? <ExternalLink size={17} style={{ flexShrink: 0 }} /> : <Building2 size={17} style={{ flexShrink: 0 }} />}
+              {(isMobile || sidebarOpen) && (
+                <span style={{ fontWeight: 600, fontSize: '0.82rem', whiteSpace: 'nowrap' }}>
+                  {isRecruiterPath ? 'Student Jobs View' : 'Recruiter Hub'}
+                </span>
+              )}
+            </button>
+          )}
+
           <button
             onClick={handleLogout}
             style={{
@@ -430,7 +518,7 @@ const Layout = () => {
                   animate={{ opacity: 1, y: 0 }}
                 >
                   <Link
-                    to="/profile"
+                    to={user?.role === 'recruiter' ? '/recruiter/profile' : '/profile'}
                     style={{
                       display: 'flex',
                       alignItems: 'center',
@@ -447,6 +535,80 @@ const Layout = () => {
                   >
                     <User size={16} color="#2E073F" /> Profile
                   </Link>
+                  {user?.role === 'admin' && (
+                    <>
+                      <Link
+                        to="/admin"
+                        style={{
+                          display: 'flex',
+                          alignItems: 'center',
+                          gap: '0.75rem',
+                          padding: '0.65rem 1rem',
+                          textDecoration: 'none',
+                          color: '#b91c1c',
+                          fontSize: '0.82rem',
+                          fontWeight: 600,
+                          borderBottom: '1px solid #f3f4f6'
+                        }}
+                        onClick={() => setProfileMenuOpen(false)}
+                      >
+                        <Shield size={15} /> Admin Console
+                      </Link>
+                      <Link
+                        to="/recruiter"
+                        style={{
+                          display: 'flex',
+                          alignItems: 'center',
+                          gap: '0.75rem',
+                          padding: '0.65rem 1rem',
+                          textDecoration: 'none',
+                          color: '#1d4ed8',
+                          fontSize: '0.82rem',
+                          fontWeight: 600,
+                          borderBottom: '1px solid #f3f4f6'
+                        }}
+                        onClick={() => setProfileMenuOpen(false)}
+                      >
+                        <Building2 size={15} /> Recruiter Hub
+                      </Link>
+                      <Link
+                        to="/dashboard"
+                        style={{
+                          display: 'flex',
+                          alignItems: 'center',
+                          gap: '0.75rem',
+                          padding: '0.65rem 1rem',
+                          textDecoration: 'none',
+                          color: '#6d28d9',
+                          fontSize: '0.82rem',
+                          fontWeight: 600,
+                          borderBottom: '1px solid #f3f4f6'
+                        }}
+                        onClick={() => setProfileMenuOpen(false)}
+                      >
+                        <GraduationCap size={15} /> Student View
+                      </Link>
+                    </>
+                  )}
+                  {user?.role === 'recruiter' && (
+                    <Link
+                      to="/jobs"
+                      style={{
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: '0.75rem',
+                        padding: '0.65rem 1rem',
+                        textDecoration: 'none',
+                        color: '#4338ca',
+                        fontSize: '0.82rem',
+                        fontWeight: 600,
+                        borderBottom: '1px solid #f3f4f6'
+                      }}
+                      onClick={() => setProfileMenuOpen(false)}
+                    >
+                      <Briefcase size={15} /> Student Job Board
+                    </Link>
+                  )}
                   <div
                     style={{
                       display: 'flex',

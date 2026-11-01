@@ -29,14 +29,14 @@ const accounts = [
     }
   },
   {
-    name: 'Sri Shakthi Placement Cell',
+    name: 'Apex Institute Placement Cell',
     email: 'college@skillforge.com',
     password: 'college123',
     role: 'college_admin',
     college: {
-      name: 'Sri Shakthi Institute of Engineering and Technology',
+      name: 'Apex Institute of Technology',
       location: 'Coimbatore, Tamil Nadu',
-      website: 'https://srishakthi.ac.in',
+      website: 'https://apex-tech.edu',
       placementCell: 'Directorate of Corporate Relations & Placements'
     }
   },
@@ -45,7 +45,7 @@ const accounts = [
     email: 'student@skillforge.com',
     password: 'student123',
     role: 'student',
-    education: [{ institution: 'Sri Shakthi Institute of Engineering and Technology', degree: 'B.Tech IT', year: '2026' }],
+    education: [{ institution: 'Apex Institute of Technology', degree: 'B.Tech IT', year: '2026' }],
     skills: [
       { name: 'JavaScript', level: 85, category: 'technical' },
       { name: 'React', level: 80, category: 'technical' },

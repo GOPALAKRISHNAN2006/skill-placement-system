@@ -34,7 +34,7 @@ const useAuthStore = create(
             useAssessmentStore.getState().loadForUser(userId).catch(e => console.log('Assessment load error:', e))
           ]).catch(() => {});
           
-          return { success: true };
+          return { success: true, user };
         } catch (error) {
           set({ isLoading: false });
           return { 
@@ -64,7 +64,7 @@ const useAuthStore = create(
             useAssessmentStore.getState().loadForUser(userId).catch(e => console.log('Assessment load error:', e))
           ]).catch(() => {});
           
-          return { success: true };
+          return { success: true, user };
         } catch (error) {
           set({ isLoading: false });
           return { 

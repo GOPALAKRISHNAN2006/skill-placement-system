@@ -2,12 +2,12 @@ const test = require('node:test');
 const assert = require('node:assert/strict');
 const ResumeParserService = require('../services/resumeParser.service');
 
-const gopalResumeText = `
+const sampleResumeText = `
 Git-HubLeetcode
 Linkedin
 
-gopalamuruga007@gmail.com
-GOPALAKRISHNAN M
+alex.morgan@example.com
+Alex Morgan
 MERN STACK DEVELOPER
 SUMMARY
 SKILLS
@@ -35,7 +35,7 @@ authentication and  role-based access control, and  integrating AI-powered featu
 JavaScript, data structures and algorithms, OOP, and database management, with practical project experience
 and Smart India Hackathon 2025 finalist recognition.
 EDUCATION
-Sri Shakthi Institute of Engineering and Technology
+Apex Institute of Technology
 B.TECH INFORMATION TECHNOLOGY - CGPA - 8.17
 Government Higher Secondary School
 HSC - 86%
@@ -79,7 +79,7 @@ Structured Query Language — HackerRank | Dec 2025
 `;
 
 test('validates user resume extraction against all section requirements', async () => {
-  const analysis = await ResumeParserService.analyzeResumeText(gopalResumeText);
+  const analysis = await ResumeParserService.analyzeResumeText(sampleResumeText);
 
   // 1. Projects: Exactly 3 projects with correct titles and non-empty tech stacks
   assert.equal(analysis.projects.length, 3, 'Must extract exactly 3 projects');
@@ -104,7 +104,7 @@ test('validates user resume extraction against all section requirements', async 
 
   // 3. Education: Exactly 2 records, no duplicates
   assert.equal(analysis.education.length, 2, 'Must extract exactly 2 education records');
-  assert.match(analysis.education[0].institution, /Sri Shakthi/i);
+  assert.match(analysis.education[0].institution, /Apex Institute/i);
   assert.match(analysis.education[0].degree, /B\.?Tech/i);
   assert.match(analysis.education[0].field, /Information Technology/i);
   assert.match(analysis.education[0].grade, /8\.17/);

@@ -3,6 +3,7 @@ const User = require('../models/User');
 const Job = require('../models/Job');
 const Course = require('../models/Course');
 const Skill = require('../models/Skill');
+const Assessment = require('../models/Assessment');
 const { protect, authorize } = require('../middleware/auth.middleware');
 
 const router = express.Router();
@@ -536,6 +537,334 @@ router.delete('/courses/:id', async (req, res) => {
     res.status(500).json({
       success: false,
       message: 'Failed to delete course',
+      error: error.message
+    });
+  }
+});
+
+/**
+ * @route   GET /api/admin/colleges
+ * @desc    Get all colleges and their placement statistics
+ * @access  Private (Admin)
+ */
+router.get('/colleges', async (req, res) => {
+  try {
+    const collegeAdmins = await User.find({ role: 'college_admin' })
+      .select('name email college createdAt');
+
+    // Aggregate students by college name
+    const students = await User.find({ role: 'student' })
+      .select('name email education metrics skills');
+
+    const collegeStatsMap = {};
+
+    collegeAdmins.forEach(ca => {
+      const cName = ca.college?.name || ca.name;
+      collegeStatsMap[cName] = {
+        _id: ca._id,
+        name: cName,
+        location: ca.college?.location || 'Tamil Nadu, India',
+        website: ca.college?.website || 'https://apex-tech.edu',
+        placementCell: ca.college?.placementCell || 'Directorate of Placements',
+        adminEmail: ca.email,
+        adminName: ca.name,
+        enrolledStudents: 0,
+        avgSkillScore: 0,
+        totalScoreSum: 0,
+        placedCount: 0,
+        createdAt: ca.createdAt
+      };
+    });
+
+    students.forEach(s => {
+      const studentInst = s.education?.[0]?.institution || 'General Student Pool';
+      if (!collegeStatsMap[studentInst]) {
+        collegeStatsMap[studentInst] = {
+          _id: `inst-${studentInst}`,
+          name: studentInst,
+          location: 'India',
+          website: '',
+          placementCell: 'Placement Cell',
+          adminEmail: 'placement@' + studentInst.toLowerCase().replace(/[^a-z0-9]/g, '') + '.edu',
+          adminName: 'College Officer',
+          enrolledStudents: 0,
+          avgSkillScore: 0,
+          totalScoreSum: 0,
+          placedCount: 0,
+          createdAt: new Date()
+        };
+      }
+      collegeStatsMap[studentInst].enrolledStudents++;
+      const score = s.metrics?.skillReadinessScore || 70;
+      collegeStatsMap[studentInst].totalScoreSum += score;
+      if (score >= 75) {
+        collegeStatsMap[studentInst].placedCount++;
+      }
+    });
+
+    const colleges = Object.values(collegeStatsMap).map(c => ({
+      ...c,
+      avgSkillScore: c.enrolledStudents > 0 ? Math.round(c.totalScoreSum / c.enrolledStudents) : 75,
+      placementRate: c.enrolledStudents > 0 ? Math.round((c.placedCount / c.enrolledStudents) * 100) : 80
+    }));
+
+    res.json({
+      success: true,
+      data: colleges
+    });
+  } catch (error) {
+    console.error('Admin get colleges error:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Failed to fetch colleges',
+      error: error.message
+    });
+  }
+});
+
+/**
+ * @route   POST /api/admin/colleges
+ * @desc    Register a new college / placement cell
+ * @access  Private (Admin)
+ */
+router.post('/colleges', async (req, res) => {
+  try {
+    const { name, email, password, location, website, placementCell } = req.body;
+
+    if (!name || !email || !password) {
+      return res.status(400).json({
+        success: false,
+        message: 'College name, admin email, and password are required'
+      });
+    }
+
+    const existing = await User.findOne({ email });
+    if (existing) {
+      return res.status(400).json({
+        success: false,
+        message: 'A user with this email already exists'
+      });
+    }
+
+    const collegeUser = await User.create({
+      name: `${name} Placement Cell`,
+      email,
+      password,
+      role: 'college_admin',
+      college: {
+        name,
+        location: location || 'Tamil Nadu, India',
+        website: website || '',
+        placementCell: placementCell || 'Placement & Training Directorate'
+      }
+    });
+
+    res.status(201).json({
+      success: true,
+      message: 'College registered successfully',
+      data: collegeUser
+    });
+  } catch (error) {
+    console.error('Admin register college error:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Failed to register college',
+      error: error.message
+    });
+  }
+});
+
+/**
+ * @route   GET /api/admin/assessments
+ * @desc    Get all assessments
+ * @access  Private (Admin)
+ */
+router.get('/assessments', async (req, res) => {
+  try {
+    const assessments = await Assessment.find().populate('skill', 'name category');
+    res.json({
+      success: true,
+      data: assessments
+    });
+  } catch (error) {
+    console.error('Admin get assessments error:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Failed to fetch assessments',
+      error: error.message
+    });
+  }
+});
+
+/**
+ * @route   POST /api/admin/assessments
+ * @desc    Create a new assessment
+ * @access  Private (Admin)
+ */
+router.post('/assessments', async (req, res) => {
+  try {
+    const { title, description, skillName, category, difficulty, duration, questions } = req.body;
+
+    if (!title || !skillName) {
+      return res.status(400).json({
+        success: false,
+        message: 'Title and skillName are required'
+      });
+    }
+
+    let skill = await Skill.findOne({ name: skillName });
+    if (!skill) {
+      skill = await Skill.create({
+        name: skillName,
+        category: category || 'technical',
+        demandLevel: 'high'
+      });
+    }
+
+    const assessment = await Assessment.create({
+      title,
+      description: description || `Assess proficiency in ${skillName}`,
+      skill: skill._id,
+      skillName,
+      category: category || 'technical',
+      difficulty: difficulty || 'intermediate',
+      duration: duration || 20,
+      questions: questions || [
+        {
+          question: `Which of the following is true about ${skillName}?`,
+          options: ['Standard practice', 'Deprecated', 'Not supported', 'None of the above'],
+          correctAnswer: 'Standard practice',
+          points: 1
+        }
+      ]
+    });
+
+    res.status(201).json({
+      success: true,
+      message: 'Assessment created successfully',
+      data: assessment
+    });
+  } catch (error) {
+    console.error('Admin create assessment error:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Failed to create assessment',
+      error: error.message
+    });
+  }
+});
+
+/**
+ * @route   GET /api/admin/skills
+ * @desc    Get all skills
+ * @access  Private (Admin)
+ */
+router.get('/skills', async (req, res) => {
+  try {
+    const skills = await Skill.find().sort({ demandLevel: -1, name: 1 });
+    res.json({
+      success: true,
+      data: skills
+    });
+  } catch (error) {
+    console.error('Admin get skills error:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Failed to fetch skills',
+      error: error.message
+    });
+  }
+});
+
+/**
+ * @route   POST /api/admin/skills
+ * @desc    Add a new skill
+ * @access  Private (Admin)
+ */
+router.post('/skills', async (req, res) => {
+  try {
+    const { name, category, demandLevel, growthTrend, description } = req.body;
+
+    if (!name || !category) {
+      return res.status(400).json({
+        success: false,
+        message: 'Skill name and category are required'
+      });
+    }
+
+    const existing = await Skill.findOne({ name });
+    if (existing) {
+      return res.status(400).json({
+        success: false,
+        message: 'Skill already exists in taxonomy'
+      });
+    }
+
+    const newSkill = await Skill.create({
+      name,
+      category,
+      demandLevel: demandLevel || 'high',
+      growthTrend: growthTrend || 'rising',
+      description: description || ''
+    });
+
+    res.status(201).json({
+      success: true,
+      message: 'Skill added to platform taxonomy',
+      data: newSkill
+    });
+  } catch (error) {
+    console.error('Admin add skill error:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Failed to add skill',
+      error: error.message
+    });
+  }
+});
+
+/**
+ * @route   GET /api/admin/system-health
+ * @desc    Get system diagnostics and environment summary
+ * @access  Private (Admin)
+ */
+router.get(['/system-health', '/settings'], async (req, res) => {
+  try {
+    const mongoose = require('mongoose');
+    const os = require('os');
+
+    const dbStatus = mongoose.connection.readyState === 1 ? 'connected' : 'disconnected';
+    const dbName = mongoose.connection.name || 'sps';
+
+    const memoryUsage = process.memoryUsage();
+
+    res.json({
+      success: true,
+      data: {
+        nodeVersion: process.version,
+        platform: process.platform,
+        serverUptime: Math.round(process.uptime()),
+        database: {
+          status: dbStatus,
+          name: dbName,
+          host: mongoose.connection.host || 'localhost'
+        },
+        aiModel: {
+          configured: Boolean(process.env.GEMINI_API_KEY),
+          model: process.env.RESUME_AI_MODEL || 'gemini-3.8-flash'
+        },
+        memory: {
+          rssMb: Math.round(memoryUsage.rss / 1024 / 1024),
+          heapUsedMb: Math.round(memoryUsage.heapUsed / 1024 / 1024)
+        },
+        systemLoad: os.loadavg ? os.loadavg() : [0, 0, 0]
+      }
+    });
+  } catch (error) {
+    console.error('Admin system health error:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Failed to fetch system diagnostics',
       error: error.message
     });
   }

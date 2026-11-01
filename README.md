@@ -9,7 +9,7 @@ The goal is to help students identify skill gaps, improve their technical abilit
 | Resource | Link |
 |---|---|
 | **Live Application** | [Open SkillForge](https://skill-placement-system-1.onrender.com/) |
-| **GitHub Repository** | [View Source Code](https://github.com/bhavadharani-sudhakaran-05/skill-placement-system) |
+| **GitHub Repository** | [View Source Code](#) |
 
 ## ✨ Key Features
 
@@ -193,7 +193,7 @@ Before running SkillForge locally, install:
 ### Step 1: Clone the repository
 
 ```bash
-git clone https://github.com/bhavadharani-sudhakaran-05/skill-placement-system.git
+git clone https://github.com/skillforge/skill-placement-system.git
 cd skill-placement-system
 ```
 
@@ -299,7 +299,7 @@ SkillForge is hosted on Render.
 
 - **Frontend:** [SkillForge Live Application](https://skill-placement-system-1.onrender.com/)
 - **Backend:** [SkillForge Backend Service](https://skill-placement-system.onrender.com)
-- **Source Code:** [GitHub Repository](https://github.com/bhavadharani-sudhakaran-05/skill-placement-system)
+- **Source Code:** [GitHub Repository](#)
 
 The React frontend communicates with the Node.js and Express backend through API requests. The backend connects to MongoDB Atlas and uses configured environment variables for database access and other integrations.
 
@@ -341,10 +341,8 @@ These examples describe tasks performed during development. The implementation a
 - Enhance progress reporting and data visualization.
 - Improve the overall user experience and responsiveness.
 
-## 👩‍💻 Author
+## 👥 Team
 
-**Bhavadharani S**
+**SkillForge Core Platform Team**
 
 **Project:** SkillForge — Skill Development and Placement Recommendation System
-
-**GitHub:** [bhavadharani-sudhakaran-05](https://github.com/bhavadharani-sudhakaran-05)

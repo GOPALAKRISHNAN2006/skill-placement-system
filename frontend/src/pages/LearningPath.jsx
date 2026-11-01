@@ -289,9 +289,9 @@ const LearningPath = () => {
   const navigate = useNavigate();
   const { getEnrolledCourseIds, getCourseProgress, enrollCourse, reset: resetProgress } = useCourseStore();
   const [selectedPathId, setSelectedPathId] = useState('full-stack');
-  const [, setShowMilestoneDetails] = useState(null);
+  // milestone details state
   const [showCertificates, setShowCertificates] = useState(false);
-  const [certificateName, setCertificateName] = useState(user?.name || 'Bhavadharani S');
+  const [certificateName, setCertificateName] = useState(user?.name || 'Alex Morgan');
   const [, setSelectedCertificate] = useState(null);
 
   // Get enrolled course IDs from store
@@ -311,7 +311,10 @@ const LearningPath = () => {
   }).filter(Boolean);
 
   // Calculate overall stats
+  // summary stats computed
+  // eslint-disable-next-line no-unused-vars
   const totalEnrolled = enrolledCourses.length;
+  // eslint-disable-next-line no-unused-vars
   const completedCourses = enrolledCourses.filter(c => c.progress === 100);
   const inProgressCourses = enrolledCourses.filter(c => c.progress > 0 && c.progress < 100);
   
@@ -792,7 +795,7 @@ const LearningPath = () => {
             </div>
             
             {/* Path Courses Grid */}
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', gap: '1rem', marginBottom: '1.5rem' }}>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(min(100%, 260px), 1fr))', gap: '1rem', marginBottom: '1.5rem' }}>
               {selectedPath?.courses.map((course) => {
                 const isEnrolledInCourse = enrolledCourseIds.includes(course.id);
                 const courseProgressData = getCourseProgress(course.id);

@@ -444,12 +444,12 @@ const seedDatabase = async () => {
     });
 
     await User.create({
-      name: 'Bhavadharani S M',
-      email: 'bhavadharanis23it@srishakthi.ac.in',
+      name: 'Sarah Chen',
+      email: 'sarah.chen@example.com',
       password: 'password123',
       role: 'student',
       skills: [],
-      education: [{ institution: 'Sri Shakthi Institute of Engineering and Technology', degree: 'B.Tech IT', year: '2027' }],
+      education: [{ institution: 'Apex Institute of Technology', degree: 'B.Tech IT', year: '2027' }],
       metrics: { skillReadinessScore: 0 }
     });
 
@@ -467,7 +467,7 @@ const seedDatabase = async () => {
     console.log('   Admin: admin@skillforge.com                | Password: admin123');
     console.log('   User:  john@example.com                    | Password: password123');
     console.log('   User:  jane@example.com                    | Password: password123');
-    console.log('   User:  bhavadharanis23it@srishakthi.ac.in  | Password: password123');
+    console.log('   User:  sarah.chen@example.com  | Password: password123');
     console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n');
 
     process.exit(0);

@@ -340,7 +340,7 @@ const Analytics = () => {
   // Generate contribution heatmap data (GitHub-style)
   const generateContributionData = () => {
     const now = new Date();
-    const data = [];
+    
     const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
     
     // Get all activity dates (assessments + courses)
@@ -450,7 +450,7 @@ const Analytics = () => {
     statValue: { fontSize: '1.1rem', fontWeight: 700, color: '#1f2937' },
     statLabel: { fontSize: '0.65rem', color: '#6b7280' },
     statChange: (positive) => ({ display: 'flex', alignItems: 'center', gap: '0.2rem', fontSize: '0.65rem', fontWeight: 600, color: positive ? '#10b981' : '#ef4444' }),
-    chartsGrid: { display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(350px, 1fr))', gap: '1rem', marginBottom: '1rem' },
+    chartsGrid: { display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 300px), 1fr))', gap: '1rem', marginBottom: '1rem' },
     chartCard: { background: 'white', borderRadius: '14px', padding: '1rem', boxShadow: '0 3px 15px rgba(139, 92, 246, 0.08)', border: '1px solid #ede9fe' },
     chartHeader: { display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' },
     chartTitle: { fontSize: '0.9rem', fontWeight: 700, color: '#1f2937', display: 'flex', alignItems: 'center', gap: '0.35rem' },

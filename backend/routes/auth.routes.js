@@ -14,40 +14,30 @@ const generateToken = (id) => {
 
 /**
  * @route   POST /api/auth/register
- * @desc    Register a new user
+ * @desc    Register a new student user
  * @access  Public
  */
 router.post('/register', validateRegistration, async (req, res) => {
   try {
-    const { name, email, password, role, company, college, institution, department, graduationYear } = req.body;
+    const { name, email, password, institution, department, graduationYear } = req.body;
 
     // Check if user exists
     const existingUser = await User.findOne({ email });
     if (existingUser) {
       return res.status(400).json({
         success: false,
-        message: 'User already exists with this email'
+        message: 'A student account already exists with this email'
       });
-    }
-
-    let userRole = role === 'college' ? 'college_admin' : (role || 'student');
-    const allowedRoles = ['student', 'recruiter', 'college_admin', 'admin'];
-    if (!allowedRoles.includes(userRole)) {
-      userRole = 'student';
     }
 
     const userData = {
       name,
       email,
       password,
-      role: userRole
+      role: 'student'
     };
 
-    if (userRole === 'recruiter') {
-      userData.company = typeof company === 'object' ? company : { name: company || institution || 'Company' };
-    } else if (userRole === 'college_admin') {
-      userData.college = typeof college === 'object' ? college : { name: college || institution || 'Institution' };
-    } else if (institution || department || graduationYear) {
+    if (institution || department || graduationYear) {
       userData.education = [{
         institution: institution || '',
         degree: department || '',
@@ -63,7 +53,7 @@ router.post('/register', validateRegistration, async (req, res) => {
 
     res.status(201).json({
       success: true,
-      message: 'Registration successful',
+      message: 'Student account registered successfully',
       data: {
         user: {
           id: user._id,
@@ -86,7 +76,7 @@ router.post('/register', validateRegistration, async (req, res) => {
 
 /**
  * @route   POST /api/auth/login
- * @desc    Login user
+ * @desc    Login user (student, recruiter, college_admin, admin)
  * @access  Public
  */
 router.post('/login', validateLogin, async (req, res) => {

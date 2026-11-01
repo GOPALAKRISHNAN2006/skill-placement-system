@@ -1,4 +1,3 @@
-
 const { body, validationResult } = require('express-validator');
 
 // Handle validation errors
@@ -18,7 +17,7 @@ const handleValidationErrors = (req, res, next) => {
   next();
 };
 
-// User registration validation
+// User registration validation - strictly student only
 const validateRegistration = [
   body('name')
     .trim()
@@ -39,8 +38,8 @@ const validateRegistration = [
 
   body('role')
     .optional()
-    .isIn(['student', 'recruiter', 'college_admin', 'college', 'admin'])
-    .withMessage('Role must be student, recruiter, college_admin, or admin'),
+    .equals('student')
+    .withMessage('Only student registration is allowed via public registration'),
 
   handleValidationErrors
 ];

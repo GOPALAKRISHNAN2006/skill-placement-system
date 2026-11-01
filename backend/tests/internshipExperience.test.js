@@ -5,9 +5,9 @@ const ResumeAnalysisService = require('../services/resumeAnalysis.service');
 
 test('Resume with internship under INTERNSHIP heading is extracted into experience with type Internship', async () => {
   const sampleResume = `
-GOPAL M
-Email: gopal@example.com | Phone: 9876543210
-GitHub: https://github.com/gopal | LinkedIn: https://linkedin.com/in/gopal
+Jordan Taylor
+Email: jordan.taylor@example.com | Phone: 9876543210
+GitHub: https://github.com/jordantaylor | LinkedIn: https://linkedin.com/in/jordantaylor
 
 TECHNICAL SKILLS
 Languages: Java, JavaScript, SQL

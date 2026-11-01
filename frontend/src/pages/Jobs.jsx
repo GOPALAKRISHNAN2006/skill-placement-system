@@ -220,7 +220,7 @@ const Jobs = () => {
   };
 
   const styles = {
-    container: { padding: '1rem', maxWidth: '900px', margin: '0 auto', fontFamily: "'Inter', sans-serif", fontSize: '0.875rem' },
+    container: { padding: 'clamp(0.75rem, 2vw, 1rem)', maxWidth: '900px', margin: '0 auto', fontFamily: "'Inter', sans-serif", fontSize: '0.875rem' },
     header: { marginBottom: '1rem' },
     title: { fontSize: '1.25rem', fontWeight: 700, background: 'linear-gradient(135deg, #2E073F, #2E073F)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', marginBottom: '0.25rem' },
     subtitle: { color: '#6b7280', fontSize: '0.8rem' },
@@ -232,7 +232,7 @@ const Jobs = () => {
     filterButton: { display: 'flex', alignItems: 'center', gap: '0.35rem', padding: '0.6rem 1rem', borderRadius: '10px', border: '1.5px solid #ede9fe', background: 'white', cursor: 'pointer', fontWeight: 500, color: '#2E073F', fontSize: '0.8rem' },
     filtersRow: { display: 'flex', gap: '0.5rem', marginBottom: '1rem', flexWrap: 'wrap' },
     filterChip: (active) => ({ padding: '0.35rem 0.85rem', borderRadius: '20px', border: 'none', cursor: 'pointer', fontWeight: 500, fontSize: '0.75rem', transition: 'all 0.2s', background: active ? 'linear-gradient(135deg, #2E073F 0%, #2E073F 100%)' : '#f5f3ff', color: active ? 'white' : '#2E073F' }),
-    jobsList: { display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '0.85rem' },
+    jobsList: { display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 320px), 1fr))', gap: '0.85rem' },
     jobCard: { background: 'white', borderRadius: '14px', padding: '1rem', boxShadow: '0 2px 12px rgba(139, 92, 246, 0.06)', border: '1px solid #ede9fe', transition: 'all 0.3s' },
     jobHeader: { display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '0.65rem', gap: '0.5rem' },
     jobTitleRow: { display: 'flex', alignItems: 'flex-start', gap: '0.65rem', flex: 1, minWidth: 0 },

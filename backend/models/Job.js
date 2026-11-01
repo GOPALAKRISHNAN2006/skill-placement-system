@@ -74,15 +74,18 @@ const jobSchema = new mongoose.Schema({
   
   applicants: [{
     user: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
+    userId: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
     appliedAt: { type: Date, default: Date.now },
     status: {
       type: String,
-      enum: ['pending', 'reviewed', 'shortlisted', 'rejected', 'hired'],
+      enum: ['pending', 'applied', 'reviewed', 'shortlisted', 'interview', 'rejected', 'hired'],
       default: 'pending'
     },
     matchScore: Number,
     coverLetter: String,
-    resume: String
+    resume: String,
+    skillGapAnalysis: mongoose.Schema.Types.Mixed,
+    feedback: String
   }],
   
   deadline: Date,

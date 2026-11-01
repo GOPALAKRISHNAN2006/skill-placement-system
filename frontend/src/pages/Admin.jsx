@@ -985,7 +985,7 @@ const Admin = () => {
                 {newUserData.role === 'college_admin' && (
                   <div>
                     <label style={{ display: 'block', fontSize: '0.85rem', fontWeight: 600, marginBottom: '0.35rem' }}>College / Institute Name</label>
-                    <input type="text" value={newUserData.collegeName} onChange={e => setNewUserData({ ...newUserData, collegeName: e.target.value })} placeholder="Sri Shakthi Institute of Engineering" style={{ width: '100%', padding: '0.75rem', borderRadius: '10px', border: '1px solid #cbd5e1', boxSizing: 'border-box' }} />
+                    <input type="text" value={newUserData.collegeName} onChange={e => setNewUserData({ ...newUserData, collegeName: e.target.value })} placeholder="Apex Institute of Technology" style={{ width: '100%', padding: '0.75rem', borderRadius: '10px', border: '1px solid #cbd5e1', boxSizing: 'border-box' }} />
                   </div>
                 )}
                 <div style={{ display: 'flex', gap: '0.75rem', marginTop: '1rem' }}>

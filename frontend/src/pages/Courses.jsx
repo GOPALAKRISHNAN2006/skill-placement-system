@@ -26,8 +26,7 @@ const Courses = () => {
     enrollCourse,
     getCourseProgress,
     getEnrolledCourseIds,
-    updateCourseProgress 
-  } = useCourseStore();
+    } = useCourseStore();
   
   const enrolledCourses = getEnrolledCourseIds(); // Real enrolled courses from store
 
@@ -705,7 +704,7 @@ const Courses = () => {
     filterBtn: { display: 'flex', alignItems: 'center', gap: '0.35rem', padding: '0.5rem 0.85rem', background: 'white', borderRadius: '10px', border: '1.5px solid #ede9fe', cursor: 'pointer', fontWeight: 500, color: '#2E073F', fontSize: '0.8rem' },
     categories: { display: 'flex', gap: '0.35rem', marginBottom: '1rem', flexWrap: 'wrap' },
     categoryChip: (active) => ({ padding: '0.35rem 0.75rem', borderRadius: '15px', border: 'none', background: active ? 'linear-gradient(135deg, #2E073F, #2E073F)' : '#f5f3ff', color: active ? 'white' : '#2E073F', fontWeight: 500, cursor: 'pointer', transition: 'all 0.2s', fontSize: '0.75rem' }),
-    grid: { display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))', gap: '0.85rem' },
+    grid: { display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 260px), 1fr))', gap: '0.85rem' },
     card: { background: 'white', borderRadius: '14px', overflow: 'hidden', boxShadow: '0 2px 12px rgba(139, 92, 246, 0.06)', cursor: 'pointer', transition: 'transform 0.2s, box-shadow 0.2s', border: '1px solid #ede9fe' },
     cardHeader: (color) => ({ background: `linear-gradient(135deg, ${color}20, ${color}40)`, padding: '0.85rem', position: 'relative' }),
     cardBadge: { position: 'absolute', top: '0.65rem', right: '0.65rem', padding: '0.25rem 0.5rem', background: 'white', borderRadius: '6px', fontSize: '0.65rem', fontWeight: 600, color: '#2E073F' },
@@ -751,7 +750,7 @@ const Courses = () => {
     videoStatus: (completed) => ({ color: completed ? '#10b981' : '#2E073F', fontWeight: 500 }),
     videoPlayer: { background: '#000', borderRadius: '16px', overflow: 'hidden', marginBottom: '1rem', aspectRatio: '16/9' },
     videoIframe: { width: '100%', height: '100%', border: 'none' },
-    pptList: { display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', gap: '1rem' },
+    pptList: { display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(min(100%, 260px), 1fr))', gap: '1rem' },
     pptItem: { display: 'flex', alignItems: 'center', gap: '1rem', padding: '1.25rem', background: 'linear-gradient(135deg, #fef2f2, #fff)', borderRadius: '16px', cursor: 'pointer', border: '2px solid #fecaca', transition: 'all 0.2s' },
     pptIcon: { width: '56px', height: '56px', borderRadius: '12px', background: 'linear-gradient(135deg, #ef4444, #dc2626)', color: 'white', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 },
     pptInfo: { flex: 1 },

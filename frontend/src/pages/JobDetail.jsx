@@ -84,13 +84,13 @@ As a senior member of the engineering team, you'll have the opportunity to mento
   };
 
   const styles = {
-    container: { padding: '2rem', maxWidth: '1200px', margin: '0 auto', fontFamily: "'Inter', sans-serif" },
+    container: { padding: 'clamp(1rem, 3vw, 2rem)', maxWidth: '1200px', margin: '0 auto', fontFamily: "'Inter', sans-serif" },
     backButton: { display: 'flex', alignItems: 'center', gap: '0.5rem', color: '#6b7280', cursor: 'pointer', marginBottom: '1.5rem', fontSize: '0.95rem', fontWeight: 500, border: 'none', background: 'none' },
-    grid: { display: 'grid', gridTemplateColumns: '1fr 360px', gap: '2rem' },
+    grid: { display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 320px), 1fr))', gap: '1.5rem' },
     mainContent: {},
     sidebar: {},
     header: { background: 'white', borderRadius: '20px', padding: '2rem', boxShadow: '0 4px 20px rgba(139,92,246,0.08)', marginBottom: '1.5rem', border: '1px solid #ede9fe' },
-    headerTop: { display: 'flex', gap: '1.5rem', alignItems: 'flex-start', marginBottom: '1.5rem' },
+    headerTop: { display: 'flex', gap: '1.5rem', alignItems: 'flex-start', marginBottom: '1.5rem', flexWrap: 'wrap' },
     logo: { width: '80px', height: '80px', borderRadius: '16px', objectFit: 'cover', background: '#f5f3ff' },
     headerInfo: { flex: 1 },
     title: { fontSize: '1.75rem', fontWeight: 700, color: '#1f2937', marginBottom: '0.5rem' },

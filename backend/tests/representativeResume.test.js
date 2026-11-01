@@ -2,8 +2,8 @@ const test = require('node:test');
 const assert = require('node:assert/strict');
 const ResumeParserService = require('../services/resumeParser.service');
 
-const representativeResume = `Bhavadharani S
-bhavadharani@example.com | 9876543210 | linkedin.com/in/bhavadharani | github.com/bhavadharani
+const representativeResume = `Sarah Chen
+sarah.chen@example.com | 9876543210 | linkedin.com/in/sarahchen | github.com/sarahchen
 
 EDUCATION
 B.Tech in Information Technology

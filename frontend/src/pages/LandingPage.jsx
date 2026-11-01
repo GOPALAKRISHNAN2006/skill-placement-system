@@ -40,17 +40,18 @@ const LandingPage = () => {
       {/* Navigation */}
       <nav style={{
         position: 'fixed', top: 0, left: 0, right: 0, zIndex: 50,
-        padding: '1rem 2rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center',
+        padding: 'clamp(0.75rem, 2vw, 1rem) clamp(1rem, 3vw, 2rem)', display: 'flex', justifyContent: 'space-between', alignItems: 'center',
         background: 'rgba(255,255,255,0.95)', backdropFilter: 'blur(10px)',
         boxShadow: '0 2px 20px rgba(139,92,246,0.1)'
       }}>
-        <Link to="/" style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: '1.5rem', fontWeight: 700, color: '#2E073F', textDecoration: 'none' }}>
+        <Link to="/" style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: 'clamp(1.2rem, 3vw, 1.5rem)', fontWeight: 700, color: '#2E073F', textDecoration: 'none' }}>
           <Sparkles size={28} />
           <span>SkillForge</span>
         </Link>
-        <div style={{ display: 'flex', gap: '2rem', alignItems: 'center' }}>
-          <a href="#features" style={{ color: '#374151', textDecoration: 'none', fontWeight: 500 }}>Features</a>
-          <a href="#stats" style={{ color: '#374151', textDecoration: 'none', fontWeight: 500 }}>Stats</a>
+        <div style={{ display: 'flex', gap: 'clamp(0.6rem, 2vw, 1.75rem)', alignItems: 'center' }}>
+          <a href="#features" className="hide-on-mobile" style={{ color: '#374151', textDecoration: 'none', fontWeight: 500, fontSize: '0.9rem' }}>Features</a>
+          <a href="#stats" className="hide-on-mobile" style={{ color: '#374151', textDecoration: 'none', fontWeight: 500, fontSize: '0.9rem' }}>Stats</a>
+          <Link to="/recruiter/login" className="hide-on-mobile" style={{ color: '#4338ca', textDecoration: 'none', fontWeight: 600, fontSize: '0.9rem' }}>Recruiters</Link>
           <Link to="/login" style={{ color: '#374151', textDecoration: 'none', fontWeight: 500 }}>Login</Link>
           <Link to="/register" style={{
             background: 'linear-gradient(135deg, #2E073F 0%, #2E073F 100%)', color: 'white',
@@ -66,7 +67,7 @@ const LandingPage = () => {
       {/* Hero Section */}
       <section style={{
         minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center',
-        padding: '6rem 2rem 4rem', position: 'relative', overflow: 'hidden'
+        padding: 'clamp(5rem, 10vw, 6.5rem) clamp(1rem, 3vw, 2rem) clamp(2.5rem, 5vw, 4rem)', position: 'relative', overflow: 'hidden'
       }}>
         {/* Background Blobs */}
         <div style={{
@@ -82,7 +83,7 @@ const LandingPage = () => {
 
         <div style={{
           maxWidth: '1200px', margin: '0 auto', display: 'grid',
-          gridTemplateColumns: 'repeat(auto-fit, minmax(400px, 1fr))', gap: '4rem', alignItems: 'center', position: 'relative', zIndex: 10
+          gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 320px), 1fr))', gap: 'clamp(2rem, 4vw, 4rem)', alignItems: 'center', position: 'relative', zIndex: 10
         }}>
           <motion.div
             initial={{ opacity: 0, x: -50 }}
@@ -99,7 +100,7 @@ const LandingPage = () => {
               AI-Powered Career Platform
             </div>
 
-            <h1 style={{ fontSize: '3.5rem', fontWeight: 800, lineHeight: 1.1, marginBottom: '1.5rem', color: '#1f2937' }}>
+            <h1 style={{ fontSize: 'clamp(2rem, 5.5vw, 3.5rem)', fontWeight: 800, lineHeight: 1.15, marginBottom: '1.5rem', color: '#1f2937' }}>
               Transform Your Career With{' '}
               <span style={{
                 background: 'linear-gradient(135deg, #2E073F 0%, #2E073F 50%, #a78bfa 100%)',
@@ -113,7 +114,7 @@ const LandingPage = () => {
               </span>
             </h1>
 
-            <p style={{ fontSize: '1.25rem', color: '#6b7280', marginBottom: '2rem', lineHeight: 1.7 }}>
+            <p style={{ fontSize: 'clamp(0.95rem, 2vw, 1.25rem)', color: '#6b7280', marginBottom: '1.75rem', lineHeight: 1.7 }}>
               Intelligent Skill Development & Placement Recommendation System powered by AI.
               Bridge your skill gaps, get personalized learning paths, and land your dream job.
             </p>
@@ -188,10 +189,10 @@ const LandingPage = () => {
       </section>
 
       {/* Stats Section */}
-      <section id="stats" style={{ padding: '5rem 2rem', background: 'linear-gradient(135deg, #2E073F 0%, #2E073F 100%)' }}>
+      <section id="stats" style={{ padding: 'clamp(3rem, 6vw, 5rem) clamp(1rem, 3vw, 2rem)', background: 'linear-gradient(135deg, #2E073F 0%, #2E073F 100%)' }}>
         <div style={{
           maxWidth: '1200px', margin: '0 auto', display: 'grid',
-          gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '2rem', textAlign: 'center', color: 'white'
+          gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 140px), 1fr))', gap: '2rem', textAlign: 'center', color: 'white'
         }}>
           {stats.map((stat, index) => (
             <motion.div
@@ -201,7 +202,7 @@ const LandingPage = () => {
               transition={{ delay: index * 0.1 }}
               viewport={{ once: true }}
             >
-              <div style={{ fontSize: '3.5rem', fontWeight: 800, marginBottom: '0.5rem' }}>
+              <div style={{ fontSize: 'clamp(2.2rem, 5vw, 3.5rem)', fontWeight: 800, marginBottom: '0.5rem' }}>
                 <CountUp end={stat.value} duration={2.5} separator="," enableScrollSpy scrollSpyOnce />
                 {stat.suffix}
               </div>
@@ -212,7 +213,7 @@ const LandingPage = () => {
       </section>
 
       {/* Features Section */}
-      <section id="features" style={{ padding: '6rem 2rem', background: 'white' }}>
+      <section id="features" style={{ padding: 'clamp(3.5rem, 7vw, 6rem) clamp(1rem, 3vw, 2rem)', background: 'white' }}>
         <div style={{ textAlign: 'center', maxWidth: '700px', margin: '0 auto 4rem' }}>
           <div style={{
             display: 'inline-flex', alignItems: 'center', gap: '0.5rem',
@@ -223,7 +224,7 @@ const LandingPage = () => {
             <Zap size={16} />
             Powerful Features
           </div>
-          <h2 style={{ fontSize: '2.75rem', fontWeight: 800, color: '#111827', marginBottom: '1rem' }}>
+          <h2 style={{ fontSize: 'clamp(1.85rem, 4.5vw, 2.75rem)', fontWeight: 800, color: '#111827', marginBottom: '1rem' }}>
             7 Unique AI-Powered Features
           </h2>
           <p style={{ fontSize: '1.125rem', color: '#6b7280' }}>
@@ -233,7 +234,7 @@ const LandingPage = () => {
 
         <div style={{
           maxWidth: '1200px', margin: '0 auto', display: 'grid',
-          gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '2rem'
+          gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 280px), 1fr))', gap: '2rem'
         }}>
           {features.map((feature, index) => (
             <motion.div
@@ -268,14 +269,14 @@ const LandingPage = () => {
       </section>
 
       {/* CTA Section */}
-      <section style={{ padding: '6rem 2rem', background: 'linear-gradient(135deg, #1f2937 0%, #111827 100%)', textAlign: 'center' }}>
+      <section style={{ padding: 'clamp(3.5rem, 7vw, 6rem) clamp(1rem, 3vw, 2rem)', background: 'linear-gradient(135deg, #1f2937 0%, #111827 100%)', textAlign: 'center' }}>
         <motion.div
           style={{ maxWidth: '700px', margin: '0 auto' }}
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
         >
-          <h2 style={{ fontSize: '2.75rem', fontWeight: 800, color: 'white', marginBottom: '1rem' }}>
+          <h2 style={{ fontSize: 'clamp(1.85rem, 4.5vw, 2.75rem)', fontWeight: 800, color: 'white', marginBottom: '1rem' }}>
             Ready to Transform Your Career?
           </h2>
           <p style={{ fontSize: '1.25rem', color: '#9ca3af', marginBottom: '2rem' }}>
@@ -299,6 +300,13 @@ const LandingPage = () => {
           <span style={{ fontSize: '1.25rem', fontWeight: 700, color: 'white' }}>SkillForge</span>
         </div>
         <p>© 2026 SkillForge. Built for Smart India Hackathon.</p>
+        <div style={{ display: 'flex', justifyContent: 'center', gap: '1.25rem', flexWrap: 'wrap', margin: '1rem 0', fontSize: '0.88rem' }}>
+          <Link to="/login" style={{ color: '#c4b5fd', textDecoration: 'none' }}>Student Portal</Link>
+          <span style={{ color: '#4b5563' }}>•</span>
+          <Link to="/recruiter/login" style={{ color: '#38bdf8', textDecoration: 'none', fontWeight: 600 }}>Recruiter Portal</Link>
+          <span style={{ color: '#4b5563' }}>•</span>
+          <Link to="/admin/login" style={{ color: '#f87171', textDecoration: 'none', fontWeight: 600 }}>Admin Portal</Link>
+        </div>
         <div style={{ display: 'flex', justifyContent: 'center', gap: '1rem', marginTop: '1rem' }}>
           <Star size={20} color="#fbbf24" fill="#fbbf24" />
           <Star size={20} color="#fbbf24" fill="#fbbf24" />
